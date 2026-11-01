@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TravelGuide — Explore India Beautifully</title>
+<meta name="description" content="Discover unforgettable places across India. Plan your journey, find local food, and explore with confidence — all in one offline-capable guide.">
+<meta name="theme-color" content="#1769e8">
+<script>
+try { if (localStorage.getItem('travelguide-theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (_) {}
+</script>
+
+<!-- Open Graph -->
+<meta property="og:title" content="TravelGuide — Explore India">
+<meta property="og:description" content="Discover unforgettable places across India. Plan your journey, find local food, and explore with confidence — all in one offline-capable guide.">
+<meta property="og:type" content="website">
+
+<!-- PWA / Icons -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icon-192.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-192.svg">
+
+<!-- Font preconnects (must come before the CSS that @imports Google Fonts) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- MapLibre CSS (map uses OpenFreeMap's keyless OpenStreetMap vector tiles) -->
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.css"
+      onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@6.16.0/dist/maplibre-gl.css'">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<!-- Skip navigation link for keyboard / screen-reader users -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header class="topbar" role="banner">
+  <div class="container nav">
+    <a class="brand" href="#" onclick="showPage('home');return false"><span class="brand-mark">⌖</span>TravelGuide</a>
+    <nav class="navlinks" id="navlinks" role="navigation" aria-label="Main navigation">
+      <button class="active" data-page="home">Home</button>
+      <button data-page="destinations">Destinations</button>
+      <button data-page="planner">Trip Planner</button>
+      <button data-page="mapPage">Navigation</button>
+      <button data-page="stay">Stay</button>
+      <button data-page="food">Food Guide</button>
+      <button data-page="favourites">Favourites <span class="nav-favourite-count" id="navFavouriteCount"></span></button>
+      <button data-page="passport">Passport</button>
+      <button data-page="about">About</button>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" aria-label="Search destinations" onclick="showPage('destinations');document.getElementById('destinationSearch').focus()">⌕</button>
+      <button class="icon-btn theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Switch to dark mode" title="Switch to dark mode" aria-pressed="false"><span aria-hidden="true">☾</span></button>
+      <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navlinks" onclick="toggleMenu()">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="container" id="main-content" role="main">
+
+<!-- ============================== HOME ============================== -->
+<section class="page active" id="home">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="eyebrow">Your next story starts here</div>
+      <h1>Explore India<br>Beautifully.</h1>
+      <p>Discover unforgettable places, plan your journey, find local food, and explore with confidence.</p>
+      <form class="searchbar" onsubmit="event.preventDefault();searchFromHome()">
+        <input id="homeSearch" aria-label="Search destinations" placeholder="⌕  Search destinations (e.g. Jaipur, Manali, Goa...)">
+        <button class="btn primary" type="submit">Search destinations →</button>
+      </form>
+      <div class="hero-highlights" aria-label="TravelGuide highlights">
+        <span><strong id="destinationTotal">08</strong> destinations</span>
+        <i aria-hidden="true"></i>
+        <span>Local food <strong>✦</strong></span>
+        <i aria-hidden="true"></i>
+        <span>Plans made <strong>easy</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <section class="trip-finder section" aria-labelledby="tripFinderTitle">
+    <div class="section-head">
+      <div>
+        <span class="finder-kicker">A better way to begin</span>
+        <h2 id="tripFinderTitle">Find a trip that feels like you</h2>
+        <p>Choose the kind of escape you have in mind. We’ll point you to places worth exploring.</p>
+      </div>
+      <span class="finder-note">6 ways to explore <span aria-hidden="true">✦</span></span>
+    </div>
+    <div class="category-grid" id="categoryGrid">
+      <button class="category" data-category="Heritage" onclick="categoryFilter('Heritage')"><span class="category-icon" aria-hidden="true">🏛️</span><span class="category-copy"><strong>Culture &amp; heritage</strong><small>Forts, palaces, and stories</small></span><span class="category-arrow" aria-hidden="true">↗</span></button>
+      <button class="category" data-category="Nature" onclick="categoryFilter('Nature')"><span class="category-icon" aria-hidden="true">🌿</span><span class="category-copy"><strong>Nature escapes</strong><small>Mountains, trails, and fresh air</small></span><span class="category-arrow" aria-hidden="true">↗</span></button>
+      <button class="category" data-category="Spiritual" onclick="categoryFilter('Spiritual')"><span class="category-icon" aria-hidden="true">🪷</span><span class="category-copy"><strong>Slow &amp; soulful</strong><small>Temples and peaceful places</small></span><span class="category-arrow" aria-hidden="true">↗</span></button>
+      <button class="category" data-category="Beach" onclick="categoryFilter('Beach')"><span class="category-icon" aria-hidden="true">🏖️</span><span class="category-copy"><strong>Coastal breaks</strong><small>Beaches, sunsets, and seafood</small></span><span class="category-arrow" aria-hidden="true">↗</span></button>
+      <button class="category" data-category="Adventure" onclick="categoryFilter('Adventure')"><span class="category-icon" aria-hidden="true">🥾</span><span class="category-copy"><strong>Outdoor adventure</strong><small>Active days in the outdoors</small></span><span class="category-arrow" aria-hidden="true">↗</span></button>
+      <button class="category" data-category="Food" onclick="categoryFilter('Food')"><span class="category-icon" aria-hidden="true">🍲</span><span class="category-copy"><strong>Food journeys</strong><small>Discover India one dish at a time</small></span><span class="category-arrow" aria-hidden="true">↗</span></button>
+    </div>
+  </section>
+
+  <div class="section">
+    <div class="section-head">
+      <div><h2>Popular destinations</h2><p>Handpicked places to inspire your next trip.</p></div>
+      <button class="text-btn" onclick="showPage('destinations')">View all →</button>
+    </div>
+    <div class="cards" id="homeCards"></div>
+  </div>
+
+  <section class="section recent-section" id="recentSection" hidden>
+    <div class="section-head">
+      <div><h2>Recently viewed</h2><p>Pick up where you left off.</p></div>
+      <button class="text-btn" onclick="clearRecentlyViewed()">Clear history</button>
+    </div>
+    <div class="cards" id="recentCards"></div>
+  </section>
+
+  <div class="section">
+    <div class="section-head">
+      <div><h2>Travel your way</h2><p>Everything you need to feel ready before you go.</p></div>
+    </div>
+    <div class="about-grid">
+      <div class="info-card"><span class="big-icon">🧭</span><h3>Explore smarter</h3><p>Find attractions and create a practical order for your day.</p></div>
+      <div class="info-card"><span class="big-icon">🛏️</span><h3>Stay comfortably</h3><p>Compare illustrative stay options by budget and location.</p></div>
+      <div class="info-card"><span class="big-icon">🍜</span><h3>Taste the city</h3><p>Discover local dishes and food spots worth exploring.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== DESTINATIONS ============================== -->
+<section class="page" id="destinations">
+  <div class="page-intro">
+    <div><h1 class="page-title">Discover destinations</h1><p class="subheading">Explore new places, from peaceful nature escapes to historic cities.</p></div>
+    <span class="muted" id="destinationCount"></span>
+  </div>
+  <div class="searchbar" style="max-width:none;border:1px solid var(--line);box-shadow:none">
+    <input id="destinationSearch" aria-label="Search destinations" placeholder="Search by destination, state or interest..." oninput="renderDestinations()">
+    <button class="btn primary" onclick="renderDestinations()">Search</button>
+  </div>
+  <div class="filter-row" id="destinationFilters">
+    <button class="filter-pill active" data-filter="All">All places</button>
+    <button class="filter-pill" data-filter="Heritage">Heritage</button>
+    <button class="filter-pill" data-filter="Nature">Nature</button>
+    <button class="filter-pill" data-filter="Spiritual">Spiritual</button>
+    <button class="filter-pill" data-filter="Beach">Beaches</button>
+    <button class="filter-pill" data-filter="Adventure">Adventure</button>
+    <button class="filter-pill" data-filter="Budget-friendly">Budget-friendly</button>
+  </div>
+  <div class="destination-tools">
+    <label for="destinationSort">Sort by</label>
+    <select id="destinationSort" onchange="renderDestinations()">
+      <option value="recommended">Recommended</option>
+      <option value="name">Name A–Z</option>
+      <option value="budget">Lowest starting budget</option>
+    </select>
+    <button class="text-btn" type="button" onclick="clearDestinationFilters()">Clear filters</button>
+  </div>
+  <div class="cards" id="destinationCards"></div>
+</section>
+
+<!-- ============================== FAVOURITES ============================== -->
+<section class="page" id="favourites">
+  <div class="page-intro">
+    <div><h1 class="page-title">Your favourite places</h1><p class="subheading">Destinations you saved while exploring TravelGuide.</p></div>
+    <button class="btn soft" onclick="showPage('destinations')">Explore destinations</button>
+  </div>
+  <div class="cards" id="favouriteCards"></div>
+</section>
+
+<!-- ============================== DIGITAL TRAVEL PASSPORT ============================== -->
+<section class="page" id="passport">
+  <div class="page-intro">
+    <div><h1 class="page-title">Your digital travel passport</h1><p class="subheading">Keep your visited places, collect travel badges, and save your trip memories in this browser.</p></div>
+    <div class="passport-controls"><button class="btn soft" onclick="printPassport()">🖨 Print passport</button><button class="btn" onclick="exportPassportSummary()">⬇ Export summary</button></div>
+  </div>
+  <div class="passport-summary panel">
+    <div><span class="passport-eyebrow">YOUR TRAVEL STORY</span><h2 id="passportSummaryTitle">Your journey is just beginning</h2><p id="passportSummaryText" class="muted"></p></div>
+    <div class="passport-summary-mark" aria-hidden="true">✈</div>
+  </div>
+  <div class="passport-stats" id="passportStats"></div>
+  <section class="section">
+    <div class="section-head"><div><h2>Your badges</h2><p>Earn stamps as you explore and write about your trips.</p></div></div>
+    <div class="passport-badges" id="passportBadges"></div>
+  </section>
+  <section class="section">
+    <div class="section-head"><div><h2>Visited destinations</h2><p>Mark a place as visited from any destination card.</p></div><button class="text-btn" onclick="showPage('destinations')">Explore more →</button></div>
+    <div class="cards" id="passportVisited"></div>
+  </section>
+  <section class="section passport-journal">
+    <div class="section-head"><div><h2>Travel journal</h2><p>Add a note and one photo from a destination. Memories stay on this device.</p></div></div>
+    <form class="panel journal-form" id="journalForm">
+      <div class="journal-form-grid">
+        <label>Destination<select id="journalDestination" required></select></label>
+        <label>Visit date<input id="journalDate" type="date" required></label>
+      </div>
+      <label for="journalNote">Your note</label>
+      <textarea id="journalNote" rows="4" maxlength="1200" placeholder="A moment, place, or detail you want to remember..." required></textarea>
+      <label for="journalPhoto">Add a photo (optional)</label>
+      <input id="journalPhoto" type="file" accept="image/*">
+      <button class="btn primary" type="submit">Save journal entry</button>
+    </form>
+    <div class="journal-list" id="journalEntries"></div>
+  </section>
+  <div class="print-passport-only" id="printPassportContent"></div>
+</section>
+
+<!-- ============================== LOCAL ADMIN DASHBOARD ============================== -->
+<section class="page" id="admin">
+  <div class="page-intro">
+    <div><h1 class="page-title">Admin dashboard</h1><p class="subheading">Review local content, moderate feedback, and check destination data quality.</p></div>
+  </div>
+  <div class="admin-disclaimer"><strong>Local demo dashboard</strong><span>Changes and reports are stored only in this browser. This page has no sign-in or shared server, so it is not a secure production admin system.</span></div>
+  <div class="admin-stats" id="adminStats"></div>
+  <section class="section panel">
+    <div class="section-head"><div><h2>Manage destinations</h2><p>Edit a destination or add one to this browser’s local copy.</p></div></div>
+    <form id="adminDestinationForm" class="admin-destination-form">
+      <label for="adminDestinationSelect">Destination record</label>
+      <select id="adminDestinationSelect"></select>
+      <div class="admin-fields">
+        <label>Destination name<input id="adminName" maxlength="60" required></label>
+        <label>State / region<input id="adminState" maxlength="80" required></label>
+        <label>Category<select id="adminCategory"><option>Heritage</option><option>Nature</option><option>Spiritual</option><option>Beach</option><option>Adventure</option></select></label>
+        <label>Best season<input id="adminSeason" maxlength="100"></label>
+        <label>Tagline<input id="adminTagline" maxlength="120" required></label>
+        <label>Hero image URL<input id="adminImage" type="url" placeholder="https://… (optional)"></label>
+        <label>Latitude<input id="adminLatitude" type="number" step="any" min="-90" max="90" placeholder="Optional"></label>
+        <label>Longitude<input id="adminLongitude" type="number" step="any" min="-180" max="180" placeholder="Optional"></label>
+      </div>
+      <label for="adminDescription">Description</label>
+      <textarea id="adminDescription" rows="3" maxlength="600" required></textarea>
+      <label for="adminAttractions">Attractions (one per line: name | description | Wikipedia article title)</label>
+      <textarea id="adminAttractions" rows="4" placeholder="Hawa Mahal | Palace landmark | Hawa Mahal"></textarea>
+      <div class="admin-form-actions"><button class="btn primary" type="submit">Save destination</button><button class="btn soft" id="resetDestinationButton" type="button" onclick="resetAdminDestination()">Reset original</button><button class="btn" id="deleteDestinationButton" type="button" onclick="deleteAdminDestination()">Delete local destination</button></div>
+    </form>
+  </section>
+  <div class="admin-grid">
+    <section class="panel"><div class="section-head"><div><h2>Review moderation</h2><p>Approve or reject local visitor reviews.</p></div></div><div id="adminReviews"></div></section>
+    <section class="panel"><div class="section-head"><div><h2>Issue reports</h2><p>Resolve reports about destination information.</p></div></div><div id="adminReports"></div></section>
+  </div>
+  <section class="section panel"><div class="section-head"><div><h2>Data quality</h2><p>Check required destination details and image sources.</p></div></div><div id="adminQuality"></div></section>
+</section>
+
+<!-- ============================== DETAIL ============================== -->
+<section class="page" id="detail">
+  <div class="detail-hero" id="detailHero">
+    <div class="detail-hero-content">
+      <div class="eyebrow" id="detailState"></div>
+      <h1 id="detailName"></h1>
+      <p id="detailTagline"></p>
+    </div>
+  </div>
+  <div class="detail-tabs">
+    <button class="active" onclick="detailTab('overview',this)">Overview</button>
+    <button onclick="detailTab('attractions',this)">Places to visit</button>
+    <button onclick="detailTab('besttime',this)">Best time</button>
+    <button onclick="detailTab('stay',this)">Stay</button>
+    <button onclick="detailTab('food',this)">Food</button>
+    <button onclick="detailTab('itinerary',this)">Itinerary</button>
+  </div>
+  <div id="detailContent"></div>
+</section>
+
+<!-- ============================== MAP & NAVIGATION ============================== -->
+<section class="page" id="mapPage">
+  <div class="page-intro">
+    <div>
+      <h1 class="page-title">Map &amp; navigation</h1>
+      <p class="subheading">Choose a city and landmark, see the map, and open live directions from your current location.</p>
+    </div>
+    <button class="btn soft" onclick="centerMap()">⌖ Reset view</button>
+  </div>
+
+  <div class="map-layout">
+    <!-- Location selection and navigation -->
+    <aside class="route-list">
+      <h3>Choose a place</h3>
+      <p class="muted">View the destination on the map, then open Google Maps for live directions and distance from your current location.</p>
+      <div id="mapStatus" aria-live="polite"></div>
+      <div class="map-controls">
+        <label for="mapDestination">City</label>
+        <select id="mapDestination" class="map-select"></select>
+        <label for="mapAttraction">Attraction</label>
+        <select id="mapAttraction" class="map-select"></select>
+        <a id="selectedDirectionsLink" class="btn primary" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Navigate with Google Maps ↗</a>
+        <a id="transitDirectionsLink" class="btn soft" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Public transport directions ↗</a>
+        <button class="btn soft" type="button" onclick="focusSelectedPlace()">Show on map</button>
+        <button class="btn soft" type="button" onclick="locateMe()">📍 Center on my location</button>
+      </div>
+      <div class="route-food-stop">
+        <strong>Need a meal stop?</strong>
+        <p>Find food near your selected sightseeing stop and open the route in Google Maps.</p>
+        <a id="routeFoodLink" class="text-btn" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Find food along my route ↗</a>
+      </div>
+      <hr style="margin:18px 0;border:0;border-top:1px solid var(--line)">
+      <h3>Find nearby</h3>
+      <p class="muted">Search around the selected attraction. Google Maps can show current listings and route distance.</p>
+      <div class="map-controls">
+        <select id="nearbyType" class="map-select">
+          <option value="restaurants">Restaurants</option>
+          <option value="hotels">Hotels</option>
+          <option value="hospitals">Hospitals</option>
+          <option value="ATMs">ATMs</option>
+          <option value="petrol pumps">Petrol pumps</option>
+          <option value="parking">Parking</option>
+          <option value="public transport stops">Public transport stops</option>
+          <option value="railway stations">Railway stations</option>
+          <option value="bus stations">Bus stations</option>
+          <option value="pharmacies">Pharmacies</option>
+        </select>
+        <button class="btn soft" type="button" onclick="searchNearby()">Search nearby in Google Maps ↗</button>
+      </div>
+      <p class="modal-note" style="margin-top:14px">Google Maps directions can show estimated distance, travel time, and available driving, walking, cycling, or transit routes. Live results need internet.</p>
+    </aside>
+
+    <!-- Map containers -->
+    <div style="position:relative;min-height:560px">
+      <div class="map-mode-switch" role="group" aria-label="Map display mode">
+        <button type="button" class="btn soft" data-map-mode="live" aria-pressed="true" onclick="setMapMode('live')">Live map</button>
+        <button type="button" class="btn soft" data-map-mode="offline" aria-pressed="false" onclick="setMapMode('offline')">Offline map</button>
+      </div>
+      <!-- Offline illustrated map fallback -->
+      <div id="map" class="offline-map" aria-label="Illustrated offline street map of Jaipur">
+        <div id="offlineMapMarkers"></div>
+        <div class="map-compass" aria-hidden="true">N<span>▲</span></div>
+        <div class="map-legend">Offline Jaipur map · approximate streets and pins · connect to the internet for live maps and navigation</div>
+      </div>
+      <!-- MapLibre live map (shown when online) -->
+      <div id="live-map" role="application" aria-label="Interactive OpenStreetMap-based map"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PLANNER ============================== -->
+<section class="page" id="planner">
+  <div class="page-intro">
+    <div><h1 class="page-title">Plan your trip</h1><p class="subheading">Create a simple itinerary that fits your time, interests, and budget.</p></div>
+  </div>
+  <div class="planner-layout">
+    <form class="form-panel" id="plannerForm">
+      <h2 style="font-family:Inter,sans-serif;margin:0 0 7px">Your preferences</h2>
+      <p class="muted" style="margin:0 0 22px">Customise your travel plan.</p>
+
+      <div class="field">
+        <label for="planDestination">Destination</label>
+        <select id="planDestination">
+          <option>Jaipur</option>
+          <option>Manali</option>
+          <option>Nashik</option>
+          <option>Goa</option>
+          <option>Delhi</option>
+          <option>Varanasi</option>
+          <option>Agra</option>
+          <option>Mumbai</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="planDays">Trip duration</label>
+        <select id="planDays">
+          <option value="1">1 day</option>
+          <option value="2" selected>2 days</option>
+          <option value="3">3 days</option>
+          <option value="5">5 days</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="planBudget">Budget level</label>
+        <select id="planBudget">
+          <option>Budget-friendly</option>
+          <option>Moderate</option>
+          <option>Premium</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Travel interests</label>
+        <div class="check-grid">
+          <label><input type="checkbox" value="Heritage" checked> History &amp; culture</label>
+          <label><input type="checkbox" value="Nature"> Nature &amp; adventure</label>
+          <label><input type="checkbox" value="Food"> Food &amp; shopping</label>
+          <label><input type="checkbox" value="Relaxation"> Relaxation</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="planFood">Food preference</label>
+        <select id="planFood">
+          <option>Vegetarian</option>
+          <option>Non-vegetarian</option>
+          <option>Both</option>
+        </select>
+      </div>
+
+      <button class="btn primary" style="width:100%" type="submit">Generate itinerary ✦</button>
+      <p class="modal-note">This demo generates a sample plan in your browser. It does not book or reserve anything.</p>
+    </form>
+
+    <div class="itinerary">
+      <div class="section-head" style="margin:0">
+        <div>
+          <h2 id="itineraryTitle">Your sample itinerary</h2>
+          <p class="muted" id="itinerarySubtitle">A balanced 2-day plan</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" onclick="printItinerary()">🖨 Print / Save PDF</button>
+          <button class="btn" onclick="exportItinerary()" id="exportBtn">⬇ Export JSON</button>
+        </div>
+      </div>
+      <div class="itinerary-cover" id="itineraryCover"></div>
+      <div class="itinerary-highlights" id="itineraryHighlights"></div>
+      <div class="day-switch" id="daySwitch"></div>
+      <div id="itineraryTimeline"></div>
+      <div class="notice" id="budgetSummary">Estimated cost is illustrative and should be checked before travel.</div>
+      <div id="printItineraryContent" class="print-itinerary-content" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== STAY ============================== -->
+<section class="page" id="stay">
+  <div class="page-intro">
+    <div><h1 class="page-title">Find your kind of stay</h1><p class="subheading">Compare real accommodation types near your destination, then check current listings, availability, reviews, and rates.</p></div>
+  </div>
+  <div class="stay-tools">
+    <label for="stayDestFilter">Destination</label>
+    <select id="stayDestFilter" onchange="renderStays()"></select>
+    <a class="btn soft" id="bookingSearchLink" target="_blank" rel="noopener noreferrer">Search stays &amp; availability ↗</a>
+  </div>
+  <div class="filter-row" id="stayFilters">
+    <button class="filter-pill active" data-stay="All">All stays</button>
+    <button class="filter-pill" data-stay="Hotel">Hotels</button>
+    <button class="filter-pill" data-stay="Hostel">Hostels</button>
+    <button class="filter-pill" data-stay="Resort">Resorts</button>
+    <button class="filter-pill" data-stay="Homestay">Homestays</button>
+    <button class="filter-pill" data-stay="Guest house">Guest houses</button>
+    <button class="filter-pill" data-stay="Serviced apartment">Serviced apartments</button>
+    <button class="filter-pill" data-stay="PG / monthly">PG &amp; monthly stays</button>
+    <button class="filter-pill" data-stay="Villa">Villas</button>
+    <button class="filter-pill" data-stay="Camping">Camping &amp; glamping</button>
+  </div>
+  <div class="cards" id="stayCards"></div>
+  <section class="stay-options section" aria-labelledby="stayOptionsTitle">
+    <div class="section-head"><div><h2 id="stayOptionsTitle">Explore more real stay options</h2><p>Search local properties for your dates and area. Inventory, rates, and facilities are provided by the listing sites.</p></div></div>
+    <div class="stay-option-grid" id="stayOptionCards"></div>
+  </section>
+  <div class="notice">Prices, room availability, amenities, and cancellation rules change. Confirm the exact property, location, guest policies, and total price with the provider before booking. PG and monthly rentals may require direct owner verification.</div>
+</section>
+
+<!-- ============================== FOOD ============================== -->
+<section class="page" id="food">
+  <div class="page-intro">
+    <div><h1 class="page-title">Local food guide</h1><p class="subheading">Taste regional favourites, discover food streets, and find a good stop for your route.</p></div>
+  </div>
+  <!-- Destination selector -->
+  <div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <label for="foodDestFilter" style="font-weight:700;font-size:13px;color:var(--ink)">📍 Destination:</label>
+    <select id="foodDestFilter" style="padding:9px 14px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#fff;color:var(--ink)" onchange="renderFoods()">
+      <option value="All">All destinations</option>
+      <option value="Jaipur">Jaipur</option>
+      <option value="Manali">Manali</option>
+      <option value="Nashik">Nashik</option>
+      <option value="Goa">Goa</option>
+      <option value="Delhi">Delhi</option>
+      <option value="Varanasi">Varanasi</option>
+      <option value="Agra">Agra</option>
+      <option value="Mumbai">Mumbai</option>
+    </select>
+  </div>
+  <div class="filter-row" id="foodFilters">
+    <button class="filter-pill active" data-food="All">All food</button>
+    <button class="filter-pill" data-food="Street food">Street food</button>
+    <button class="filter-pill" data-food="Traditional">Traditional</button>
+    <button class="filter-pill" data-food="Budget-friendly">Budget-friendly</button>
+    <button class="filter-pill" data-food="Vegetarian">Vegetarian</button>
+    <button class="filter-pill" data-food="Non-vegetarian">Non-vegetarian</button>
+    <button class="filter-pill" data-food="Dessert">Desserts</button>
+    <button class="filter-pill" data-food="Seafood">Seafood</button>
+  </div>
+  <div class="cards" id="foodCards"></div>
+  <section class="food-streets section" aria-labelledby="foodStreetTitle">
+    <div class="section-head"><div><h2 id="foodStreetTitle">Local food streets &amp; restaurants</h2><p>Explore a well-known food area, or search nearby restaurants for current menus and hours.</p></div></div>
+    <div class="food-area-grid" id="foodAreaCards"></div>
+  </section>
+  <div class="notice">Dish prices are indicative budget guides. Restaurant opening hours, menus, dietary handling, and prices change; check current Google Maps listings and confirm with the venue.</div>
+</section>
+
+<!-- ============================== ABOUT ============================== -->
+<section class="page" id="about">
+  <div class="page-intro">
+    <div><h1 class="page-title">Travel with a little more confidence</h1><p class="subheading">A student project concept designed to bring destination discovery and trip planning together.</p></div>
+  </div>
+  <div class="detail-grid">
+    <div>
+      <div class="panel">
+        <h3>About TravelGuide</h3>
+        <p>TravelGuide is a front-end travel guide built with HTML, CSS, and JavaScript. Browse destinations, learn when to visit, explore attractions, discover local dishes, find local stays, and create an itinerary in your browser.</p>
+      </div>
+      <div class="panel">
+        <h3>Network requirements</h3>
+        <p><strong>Works offline:</strong> destination data, saved favourites, recently viewed places, travel passport, journal, local admin records, search, filters, trip planner, food guide, and stay guide.</p>
+        <p><strong>Requires internet:</strong> online attraction photos, live map tiles, and Google Maps directions/search.</p>
+        <p>When offline, destination details remain available and an illustrated Jaipur street map is shown. Its streets and pins are approximate; live turn-by-turn directions need a connection.</p>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Features in this demo</h3>
+        <p>✓ Destination search across regions, interests, attractions, and dishes, with sorting and budget filters</p>
+        <p>✓ Detailed destination pages with attractions, visit hours, expenses, and safety tips</p>
+        <p>✓ Interactive MapLibre map with OpenStreetMap-based OpenFreeMap tiles</p>
+        <p>✓ Google Maps directions for each selected landmark</p>
+        <p>✓ Current location centering</p>
+        <p>✓ Nearby place search using Google Maps</p>
+        <p>✓ Illustrated offline Jaipur street map</p>
+        <p>✓ Day-wise trip planner with budget estimate</p>
+        <p>✓ Print or save the complete multi-day itinerary as PDF, or export JSON</p>
+        <p>✓ Favourites and recently viewed destinations saved in this browser</p>
+        <p>✓ Dark mode with saved appearance preference</p>
+        <p>✓ Digital passport with visited stamps, badges, and a photo journal</p>
+        <p>✓ Local demo admin dashboard for destination records, feedback, and data checks</p>
+        <p>✓ Stay and food guide with category filters</p>
+        <p>✓ PWA manifest and service worker for static asset caching</p>
+      </div>
+      <div class="panel">
+        <h3>External services used</h3>
+        <p>🗺 <strong>OpenFreeMap</strong> — live vector map tiles using OpenStreetMap data. No API key. <a href="https://openfreemap.org/" target="_blank" rel="noopener">About the public map service</a>.</p>
+        <p>🔵 <strong>MapLibre GL JS</strong> — open-source map renderer. No API key.</p>
+        <p>🚗 <strong>Google Maps URLs</strong> — search and directions links; no API key required. <a href="https://developers.google.com/maps/documentation/urls/get-started" target="_blank" rel="noopener">Documentation</a>.</p>
+        <p>🖼 <strong>Wikipedia page images</strong> — landmark thumbnails load from matching attraction articles when online.</p>
+        <p>🔤 <strong>Google Fonts</strong> — Inter &amp; Playfair Display. No API key.</p>
+      </div>
+      <div class="panel admin-entry-panel">
+        <h3>Local content tools</h3>
+        <p>Manage destination records and review visitor feedback stored in this browser.</p>
+        <button class="btn soft" onclick="showPage('admin')">Open local admin dashboard →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div>
+      <div class="brand"><span class="brand-mark">⌖</span>TravelGuide</div>
+      <p>Discover places. Plan thoughtfully. Travel your way.</p>
+    </div>
+    <div>
+      <strong>Quick links</strong>
+      <p>
+        <button class="text-btn" onclick="showPage('destinations')" style="color:#9dafc5;font-weight:400">Destinations</button> ·
+        <button class="text-btn" onclick="showPage('planner')" style="color:#9dafc5;font-weight:400">Trip Planner</button> ·
+        <button class="text-btn" onclick="showPage('mapPage')" style="color:#9dafc5;font-weight:400">Navigation</button> ·
+        <button class="text-btn" onclick="showPage('passport')" style="color:#9dafc5;font-weight:400">Passport</button> ·
+        <button class="text-btn" onclick="showPage('admin')" style="color:#9dafc5;font-weight:400">Local Admin</button> ·
+        <button class="text-btn" onclick="showPage('about')" style="color:#9dafc5;font-weight:400">About</button>
+      </p>
+    </div>
+    <div>
+      <strong>Student project prototype</strong>
+      <p>Front-end project · HTML · CSS · JavaScript</p>
+      <p>Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color:#9dafc5">OpenStreetMap</a> contributors</p>
+    </div>
+    <div>
+      <strong>Travel responsibly</strong>
+      <p>Verify live prices, hours, routes, and safety information before travelling.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<noscript><p style="padding:20px;text-align:center">JavaScript is required for this application to work. Please enable JavaScript in your browser.</p></noscript>
+
+<!-- Service worker registration -->
+<script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  navigator.serviceWorker.register('sw.js').catch(error =>
+    console.info('Offline caching is unavailable in this browser:', error.message)
+  );
+}
+</script>
+
+<!-- App scripts: data → api → map → main -->
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/map.js"></script>
+<script src="js/script.js"></script>
+
+<!-- Classic CDN bundle also works when the page is opened from a local file. -->
+<script src="https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.js"
+        onload="window.dispatchEvent(new Event('maplibrarystarted'))"
+        onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/maplibre-gl@6.16.0/dist/maplibre-gl.js';this.onload=()=>window.dispatchEvent(new Event('maplibrarystarted'))"></script>
+
+</body>
+</html>

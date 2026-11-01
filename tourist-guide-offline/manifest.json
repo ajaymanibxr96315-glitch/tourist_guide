@@ -1,0 +1,20 @@
+{
+  "name": "TravelGuide — Explore India",
+  "short_name": "TravelGuide",
+  "description": "Discover unforgettable places across India. Plan your journey, find local food, and explore with confidence.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#1769e8",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "assets/icon-192.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "lifestyle"],
+  "lang": "en"
+}

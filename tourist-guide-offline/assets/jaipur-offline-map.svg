@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="blocks" width="96" height="78" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)">
+      <rect x="5" y="5" width="37" height="27" rx="3" fill="#f8f5eb" stroke="#e7dfcd" stroke-width="2"/>
+      <rect x="51" y="5" width="39" height="27" rx="3" fill="#f8f5eb" stroke="#e7dfcd" stroke-width="2"/>
+      <rect x="5" y="42" width="37" height="30" rx="3" fill="#f6f1e4" stroke="#e7dfcd" stroke-width="2"/>
+      <rect x="51" y="42" width="39" height="30" rx="3" fill="#f6f1e4" stroke="#e7dfcd" stroke-width="2"/>
+    </pattern>
+    <pattern id="oldcity" width="31" height="27" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+      <path d="M2 2h11v8H2zM17 2h12v8H17zM2 14h11v11H2zM17 14h12v11H17z" fill="#f1d9c8" stroke="#d8b7a0" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1000" height="620" fill="#efeede"/>
+  <path d="M0 0h1000v620H0z" fill="url(#blocks)" opacity=".88"/>
+  <!-- parks and the hills north of Jaipur -->
+  <path d="M0 0h1000v107c-84 16-115 55-198 42-69-11-89-45-157-37-72 8-95 58-165 51-86-9-95-62-177-48-63 11-78 48-143 40C94 148 58 115 0 134z" fill="#d6e4c7"/>
+  <path d="M654 24c55-41 146-25 182 13 30 31 2 60-40 70-45 12-75-3-122 10-37 10-81 8-91-17-10-24 32-57 71-76z" fill="#c6dcaf" stroke="#a9c794" stroke-width="3"/>
+  <path d="M710 70c36-22 86-20 103 2 13 17-13 30-43 35-30 5-49 12-73 4-22-8-12-29 13-41z" fill="#b5d19d"/>
+  <path d="M44 313c48-23 111-13 129 16 14 23-17 49-63 51-48 2-89-18-89-40 0-11 8-21 23-27z" fill="#cbe0bb" stroke="#b4d0a2" stroke-width="3"/>
+  <path d="M827 360c46-23 115-15 135 14 16 23-11 48-50 55-48 9-105-10-110-35-3-13 6-26 25-34z" fill="#cbe0bb" stroke="#b4d0a2" stroke-width="3"/>
+  <!-- neighbourhood street mesh -->
+  <g fill="none" stroke="#fffdf8" stroke-linecap="round" opacity=".96">
+    <path d="M-40 199C178 226 285 161 457 187s340 82 591 40" stroke-width="13"/>
+    <path d="M-20 286c165-48 315 20 468 2s362-70 580-13" stroke-width="11"/>
+    <path d="M-10 390c191-58 315 18 478-6s367-45 557 0" stroke-width="12"/>
+    <path d="M-20 505c194-44 357 19 531-8s322-27 519 18" stroke-width="13"/>
+    <path d="M122 155c35 87 2 171 32 255s9 150 45 247" stroke-width="10"/>
+    <path d="M269 152c-18 93 21 158 0 251s16 143 4 248" stroke-width="11"/>
+    <path d="M420 158c25 91-9 160 17 243s-13 162 13 250" stroke-width="10"/>
+    <path d="M585 166c-8 81 26 167 7 250s24 144 16 232" stroke-width="11"/>
+    <path d="M755 171c22 91-21 161 11 252s-8 155 26 235" stroke-width="11"/>
+    <path d="M909 172c-26 84 14 163-6 250s21 155 7 238" stroke-width="10"/>
+  </g>
+  <!-- arterial roads with warm casing -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-35 459C112 408 207 374 300 330c119-57 191-104 302-111 110-7 232 47 431 17" stroke="#dfb987" stroke-width="18"/>
+    <path d="M-35 459C112 408 207 374 300 330c119-57 191-104 302-111 110-7 232 47 431 17" stroke="#fff5d9" stroke-width="12"/>
+    <path d="M87 620c68-109 135-173 220-243 77-63 172-104 259-159 73-46 124-106 169-218" stroke="#dfb987" stroke-width="17"/>
+    <path d="M87 620c68-109 135-173 220-243 77-63 172-104 259-159 73-46 124-106 169-218" stroke="#fff5d9" stroke-width="11"/>
+    <path d="M320 0c-11 97 4 161 52 227 37 51 71 85 74 135 4 73-46 157-31 258" stroke="#dcae87" stroke-width="18"/>
+    <path d="M320 0c-11 97 4 161 52 227 37 51 71 85 74 135 4 73-46 157-31 258" stroke="#fff5d9" stroke-width="12"/>
+  </g>
+  <!-- Jaipur's walled old city and central bazaar streets -->
+  <path d="M264 243l183-38 100 37 29 111-80 89-174 14-87-83z" fill="#f5dfcf" stroke="#d9a889" stroke-width="5"/>
+  <path d="M275 253l172-34 87 34 22 93-70 75-154 12-75-71z" fill="url(#oldcity)" stroke="#fff8e8" stroke-width="5"/>
+  <path d="M284 306l154-30 95 41M295 350l145-20 93 23M342 248l25 171M400 237l18 186M458 235l14 156" fill="none" stroke="#fffaf0" stroke-width="5"/>
+  <circle cx="420" cy="325" r="22" fill="#f0c89f" stroke="#fff8e8" stroke-width="7"/>
+  <circle cx="420" cy="325" r="7" fill="#c78554"/>
+  <!-- place labels -->
+  <g font-family="Arial,sans-serif" fill="#64725c">
+    <text x="28" y="178" font-size="19" font-weight="700" letter-spacing="2">NAHARGARH HILLS</text>
+    <text x="699" y="44" font-size="16" font-weight="700" letter-spacing="1.5">AMBER HILLS</text>
+    <text x="322" y="303" font-size="13" font-weight="700" fill="#95684f">WALLED CITY</text>
+    <text x="462" y="353" font-size="12" font-weight="700" fill="#8b6c51">BADI CHAUPAR</text>
+    <text x="80" y="560" font-size="16" font-weight="700" letter-spacing="2">JAIPUR</text>
+    <text x="751" y="555" font-size="12" fill="#7c826d">CITY STREETS</text>
+  </g>
+</svg>
